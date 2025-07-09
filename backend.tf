@@ -1,9 +1,8 @@
 terraform {
   backend "azurerm" {
-    resource_group_name  = "tfstaterg"
-    storage_account_name = "tfstatestorespp"
+    resource_group_name  = "tf-backend-rg"
+    storage_account_name = "tfbackendstorage"
     container_name       = "tfstate"
     key                  = "terraform.tfstate"
-    use_azuread_auth     = true
   }
 }
