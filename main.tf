@@ -3,8 +3,11 @@ provider "azurerm" {
   subscription_id = "80d37f3a-a7f6-405b-a0d0-e2d362572306"
 }
 
+
+
+
 module "rg" {
-  source   = "./modules/resource_group"
+  source   = "./modules/resource_gorup"
   name     = var.resource_group_name
   location = var.location
 }
