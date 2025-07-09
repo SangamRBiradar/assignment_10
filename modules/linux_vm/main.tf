@@ -1,35 +1,27 @@
-resource "azurerm_network_interface" "nic" {
+resource "azurerm_linux_virtual_machine" "vm" {
   count               = var.vm_count
-  name                = "vm-nic-${count.index}"
-  location            = var.location
+  name                = "linux-vm-${count.index}"
   resource_group_name = var.resource_group_name
+  location            = var.location
+  size                = "Standard_DS1_v2"
+  admin_username      = var.admin_username
 
-  ip_configuration {
-    name                          = "internal"
-    subnet_id                     = var.subnet_id
-    private_ip_address_allocation = "Dynamic"
+  network_interface_ids = [azurerm_network_interface.nic[count.index].id]
+  admin_ssh_key {
+    username   = var.admin_username
+    public_key = var.public_key
   }
 }
 
-resource "azurerm_linux_virtual_machine" "vm" {
+resource "azurerm_network_interface" "nic" {
   count               = var.vm_count
-  name                = "vm-${count.index}"
+  name                = "nic-${count.index}"
   resource_group_name = var.resource_group_name
   location            = var.location
-  size                = "Standard_B1s"
-  admin_username      = "azureuser"
-  admin_password      = "P@ssword123!"
-  network_interface_ids = [azurerm_network_interface.nic[count.index].id]
 
-  os_disk {
-    caching              = "ReadWrite"
-    storage_account_type = "Standard_LRS"
-  }
-
-  source_image_reference {
-    publisher = "Canonical"
-    offer     = "UbuntuServer"
-    sku       = "18.04-LTS"
-    version   = "latest"
+  ip_configuration {
+    name                          = "ipconfig"
+    subnet_id                     = var.subnet_id
+    private_ip_address_allocation = "Dynamic"
   }
 }
